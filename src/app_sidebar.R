@@ -4,8 +4,13 @@ install.packages("devtools")
 library(devtools)
 install_github('facultyai/dash-bootstrap-components@r-release')
 library(dashBootstrapComponents)
-app <- dash_app()
 
+temperature_df_full<-read.csv("../data/temperature_df_full.csv")
+energy_df_full<-read.csv("../data/energy_df_full.csv")
+
+app <- dash_app(suppress_callback_exceptions = TRUE)
+
+# function for sidebar1
 
 TAB1_DROPDOWN = dccDropdown(
   options=list(
@@ -59,7 +64,7 @@ time_scale= htmlDiv(
 font_style_title<-list(size = "30px")
 font_style_label<-list(size = "20px")
 
-SIDEBAR1 <- list(dbcRow("Energy Dashboard",style=font_style_title),
+SIDEBAR1 <- list(dbcRow("Energy Dashboard",style=list(text=font_style_title)),
                  dbcRow("___________________________________________"),
                  br(),
                  dbcRow("This dashboard figure out which factors make a difference to house temperature and humidity. You can choose the factors from the dropdown below."),
@@ -74,7 +79,32 @@ SIDEBAR1 <- list(dbcRow("Energy Dashboard",style=font_style_title),
                  
 )
 
+room_list = list(
+  list(label="Bedroom",value = "Bedroom"),
+  list(label="Functional Space",value = "Functional Space"),
+  list(label="Living Area",value = "Living area"),
+  list(label="Outside",value = "Outside")
+)
+sunlight_list = list(
+  list(label="West Facing",value = "West Facing"),
+  list(label="East Facing",value = "East Facing"),
+  list(label="Outside",value = "Outside")
+)
+floor_list = list(
+  list(label="Ground Floor",value = "Ground Floor"),
+  list(label="Second Floor",value = "Second Floor"),
+  list(label="Outside",value = "Outside")
 
+)
+daynight_list = list(
+  list(label="Morning",value = "Morning"),
+  list(label="Afternoon",value = "Afternoon"),
+  list(label="Evening",value = "Evening"),
+  list(label="Night",value = "Night")
+)
+
+
+# function for sidebar2
 
 TAB2_DROPDOWN = dccDropdown(
   id="tab2_dropdown",
@@ -118,13 +148,33 @@ date_picker = dccDatePickerRange(
 
 
 weather_list = list(
-  "temperature_outside",
-  "dewpoint",
-  "humidity_outside",
-  "pressure",
-  "windspeed",
-  "visibility"
+  list(label="temperature_outside",value = "temperature_outside"),
+  list(label="dewpoint",value = "dewpoint"),
+  list(label="humidity_outside",value = "humidity_outside"),
+  list(label="pressure",value = "pressure"),
+  list(label="windspeed",value = "windspeed"),
+  list(label="visibility",value = "bisibility")
 )
+
+humidity_list = list(
+  list(label="Low Humidity",value = "Low Outside Humidity"),
+  list(label="Mid-low Humidity",value = "Mid-Low Outside Humidity"),
+  list(label="Mid-high Humidity",value = "Mid-High Outside Humidity"),
+  list(label="High Humidity",value = "High Outside Humidity")
+)
+temp_list = list(
+  list(label="Low Temperature",value = "Low Outside Temperature"),
+  list(label="Mid-low Temperature",value = "Mid-Low Outside Temperature"),
+  list(label="Mid-high Temperature",value = "Mid-High Outside Temperature"),
+  list(label="High Temperature",value = "High Outside Temperature")
+)
+wind_list = list(
+  list(label="Low Windspeed",value = "Low Outside Windspeed"),
+  list(label="Mid-low Windspeed",value = "Mid-Low Outside Windspeed"),
+  list(label="Mid-high Windspeed",value = "Mid-High Outside Windspeed"),
+  list(label="High Windspeed",value = "High Outside Windspeed")
+)
+
 
 choice = dccDropdown(
   id="chart_dropdown",
@@ -154,15 +204,18 @@ SIDEBAR2 <- list(dbcRow("Energy Dashboard",style=font_style_title),
 
 background_style<-list(backgroundColor="grey",color="white")
 
+# function for sidebar layout interface
 
 SIDEBAR = dbcCol(id="sidebar",
                  width=3,
                  style=background_style)
 
+# function for tab1
 TAB1 <- list(
     "This is Tab1"
   )
 
+# function for tab2
 TAB2<-list(
   "This is Tab2"
   )
@@ -181,6 +234,7 @@ TAB2<-list(
 #   )
 #   )
 # )
+# function for tab layout interface
 tabs <- div(
   list(
     dbcTabs(
@@ -230,6 +284,36 @@ app$callback(
       return(SIDEBAR2)
     }
     return(p("This should not ever be displayed"))
+  }
+)
+
+app$callback(
+  output("selection_tab1", "options"),
+  list(input("tab1_dropdown", "value")),
+  function(tab1_dropdown){
+  if (tab1_dropdown==1){
+   return (room_list)
+  }else if(tab1_dropdown==2){
+   return(sunlight_list)
+  }else if(tab1_dropdown==3){
+  return(floor_list)
+  }else if (tab1_dropdown==4){
+  return(daynight_list)
+  }
+  }
+)
+
+app$callback(
+  output("selection_tab2", "options"),
+  list(input("tab2_dropdown", "value")),
+  function(tab2_dropdown){
+    if (tab2_dropdown==1){
+      return (humidity_list)
+    }else if(tab2_dropdown==2){
+      return(temp_list)
+    }else if(tab2_dropdown==3){
+      return(wind_list)
+    }
   }
 )
 
