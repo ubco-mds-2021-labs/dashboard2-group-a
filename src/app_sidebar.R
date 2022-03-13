@@ -8,7 +8,7 @@ library(dashBootstrapComponents)
 temperature_df_full<-read.csv("../data/temperature_df_full.csv")
 energy_df_full<-read.csv("../data/energy_df_full.csv")
 
-app <- dash_app(suppress_callback_exceptions = TRUE)
+app <- Dash$new(external_stylesheets = dbcThemes$BOOTSTRAP,suppress_callback_exceptions = TRUE)
 
 # function for sidebar1
 
@@ -61,15 +61,15 @@ time_scale= htmlDiv(
 
 
 
-font_style_title<-list(size = "30px")
-font_style_label<-list(size = "20px")
 
-SIDEBAR1 <- list(dbcRow("Energy Dashboard",style=list(text=font_style_title)),
+
+
+SIDEBAR1 <- list(dbcRow("Energy Dashboard",style=list('font-size'='30px')),
                  dbcRow("___________________________________________"),
                  br(),
                  dbcRow("This dashboard figure out which factors make a difference to house temperature and humidity. You can choose the factors from the dropdown below."),
                  br(),
-                 dbcLabel("Compare Across:",style=font_style_label),
+                 dbcLabel("Compare Across:",style=list('font-size'='20px')),
                  br(),
                  dbcRow(TAB1_DROPDOWN),
                  br(),
@@ -183,16 +183,16 @@ choice = dccDropdown(
   options=weather_list,
 )
 
-SIDEBAR2 <- list(dbcRow("Energy Dashboard",style=font_style_title),
+SIDEBAR2 <- list(dbcRow("Energy Dashboard",style=list('font-size'='30px')),
             dbcRow("___________________________________________"),
             br(),
             dbcRow("This dashboard explores the relationship between climate factors and energy usage. You can choose the factors from the dropdown below."),
             br(),
-            dbcLabel("Choose Date Range:",style=font_style_label),
+            dbcLabel("Choose Date Range:",style=list('font-size'='20px')),
             br(),
             dbcRow(date_picker),
             br(),
-            dbcLabel("Choose Climate Factor:",style=font_style_label),
+            dbcLabel("Choose Climate Factor:"),
             br(),
             dbcRow(choice),
             br()
@@ -202,12 +202,19 @@ SIDEBAR2 <- list(dbcRow("Energy Dashboard",style=font_style_title),
             # dbcRow(tab2_selector)
 )
 
-background_style<-list(backgroundColor="grey",color="white")
+background_style<-list('color' = 'white',
+           'background-color' = 'grey', 
+           'font-size' = '20px',
+           'padding-left' = '30px',
+           'padding-top' = '20px',
+           'top-margin' = '0',
+           'left-mergin' = '5')
+
 
 # function for sidebar layout interface
 
 SIDEBAR = dbcCol(id="sidebar",
-                 width=3,
+                 md=3,
                  style=background_style)
 
 # function for tab1
@@ -220,22 +227,9 @@ TAB2<-list(
   "This is Tab2"
   )
 
-# LAYOUT = dbcContainer(
-#   fluid=TRUE,
-#   children=dbcRow(
-#     children=list(
-#       SIDEBAR,
-#       dbcCol(
-#         md=9,
-#         children=dbcTabs(
-#           children=list(TAB1, TAB2), id="tab_selection", active_tab="tab-0"
-#         )
-#       )
-#   )
-#   )
-# )
+
 # function for tab layout interface
-tabs <- div(
+tabs <- dbcCol(
   list(
     dbcTabs(
       list(
@@ -246,19 +240,23 @@ tabs <- div(
       active_tab = "tab-0"
     ),
     div(id = "content")
-  )
+  ),md = 9
 )
 
 
 
-LAYOUT = dbcRow(
+LAYOUT <- div(
+dbcRow(
   list(
-    dbcCol(SIDEBAR,width=3),
-    dbcCol(tabs)
+    SIDEBAR,
+    tabs
   )
 )
+)
 
-app |> set_layout(LAYOUT)
+
+
+app$layout(LAYOUT)
 
 
 app$callback(
