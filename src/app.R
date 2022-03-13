@@ -28,13 +28,11 @@ time_scale= htmlDiv(
 )
 
 
+
 #Plot1
 plot1_func <- function(data) {
      # nolint
-    plot1 <- ggplot(data) +
-    aes(x = time,
-        y = temperature,
-        color = room_type, group = room_type) + geom_line()
+   plot1 <- ggplot(data, aes_string(colnames(data)[1], colnames(data)[2])) + geom_point() 
 
 }
 
@@ -45,8 +43,7 @@ mean_data1 <- group_by(temp_df,month,room_type) %>%
              summarise(humidity = mean(humidity, na.rm = TRUE),date,hour_of_day,day_of_week)
 plot2 <- ggplot(mean_data1) +
     aes(x = month,
-        y = humidity,
-        color = room_type,group = room_type) + geom_line()
+        y = humidity) + geom_line()
 
 
 app <- dash_app()
@@ -59,28 +56,26 @@ app <- dash_app()
     dccGraph(figure = ggplotly(plot2))
     )
 
-app |> add_callback(
+app$callback(
     output("plot1", "figure"),
     list(input("time_scale", "value")),
-    function(time_scale) {
-        if (time_scale == "full") {
-             new_temp <-  group_by(temp_df, date, room_type) %>%
-             summarise(temperature = mean(temperature, na.rm = TRUE),time = date)
+    function(time) {
+        if (time == "full") {
+             new_temp <-  group_by(temp_df, date) %>%
+             summarise(temperature = mean(temperature))
         }
-        else if (time_scale == "month") {
-             new_temp <-  group_by(temp_df, month, room_type) %>%
-             summarise(temperature = mean(temperature, na.rm = TRUE),time = month)
+        else if (time == "month") {
+             new_temp <-  group_by(temp_df, month) %>%
+             summarise(temperature = mean(temperature))
         }
-        else if (time_scale == "daily") {
-             new_temp <- group_by(temp_df, day_of_week, room_type) %>%
-             summarise(temperature = mean(temperature, na.rm = TRUE),time = day_of_week)
+        else if (time == "daily") {
+             new_temp <- group_by(temp_df, day_of_week) %>%
+             summarise(temperature = mean(temperature))
         }
-        else if (time_scale == "hourly") 
-        {
-             new_temp <-  group_by(temp_df, hour_of_day, room_type) %>%
-             summarise(temperature = mean(temperature, na.rm = TRUE),time = hour_of_day)
+        else if (time == "hourly") {
+             new_temp <-  group_by(temp_df, hour_of_day) %>%
+             summarise(temperature = mean(temperature))
         }
-       
         p <- plot1_func(new_temp)
         ggplotly(p)
     }
