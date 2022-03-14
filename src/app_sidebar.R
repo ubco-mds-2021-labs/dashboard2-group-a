@@ -36,7 +36,12 @@ tab1_selector = htmlDiv(
         list(label="Living Area",value = "Living area"),
         list(label="Outside",value = "Outside")
       ),
-      value='Functional Space',
+      value=list(
+        "Functional Space", "Living Area", "Outside", "Bedroom",
+        "West Facing", "East Facing", "Outside",
+        "Ground Floor", "Second Floor",
+        "Afternoon", "Evening", "Night", "Morning"
+      ),
       
       inline=FALSE,
     )
@@ -74,7 +79,7 @@ SIDEBAR1 <- list(dbcRow("Energy Dashboard",style=list('font-size'='30px')),
                  br(),
                  dbcRow(TAB1_DROPDOWN),
                  br(),
-                 dbcRow(tab1_selector),
+                 #dbcRow(tab1_selector),
                  br(),
                  dbcRow(time_scale)
                  
