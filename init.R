@@ -10,5 +10,9 @@ options(repos=r)
 
 # packages go here
 install.packages('remotes')
+install.packages('tidyverse')
+install.packages('plotly')
+install.packages('dashHtmlComponents')
 
 remotes::install_github('plotly/dashR', upgrade=TRUE)
+remotes::install_github('facultyai/dash-bootstrap-components@r-release')
