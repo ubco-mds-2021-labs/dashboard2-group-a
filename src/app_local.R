@@ -37,12 +37,7 @@ tab1_selector = htmlDiv(
         list(label="Living Area",value = "Living area"),
         list(label="Outside",value = "Outside")
       ),
-      value=list(
-        "Functional Space", "Living Area", "Outside", "Bedroom",
-        "West Facing", "East Facing", "Outside",
-        "Ground Floor", "Second Floor",
-        "Afternoon", "Evening", "Night", "Morning"
-      ),
+      value="Functional Space",
       
       inline=FALSE,
     )
