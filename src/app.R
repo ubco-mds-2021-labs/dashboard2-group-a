@@ -10,6 +10,7 @@ library(tidyverse)
 library(dashHtmlComponents)
 
 temp_df <- read.csv("https://raw.githubusercontent.com/ubco-mds-2021-labs/dashboard2-group-a/data_work/data/temperature_df_full.csv") # nolint
+energy <- read_csv("https://raw.githubusercontent.com/ubco-mds-2021-labs/dashboard1-group-a/main/data/energy_df_full.csv")
 
 # function for sidebar1
 
@@ -74,7 +75,7 @@ SIDEBAR1 <- list(dbcRow("Energy Dashboard",style=list('font-size'='30px')),
                  br(),
                  dbcRow(TAB1_DROPDOWN),
                  br(),
-                 dbcRow(tab1_selector),
+                 #dbcRow(tab1_selector),
                  br(),
                  dbcRow(time_scale)
                  
@@ -142,19 +143,27 @@ date_picker = dccDatePickerRange(
   min_date_allowed=as.Date(c("2016-01-11")),
   max_date_allowed=as.Date(c("2016-05-27")),
   initial_visible_month=as.Date("2016-01-11"),
-  start_date=as.Date(c("2016-01-11")),
-  end_date=as.Date(c("2016-05-27"))
+  start_date=as.Date(c("2016-01-12")),
+  end_date=as.Date(c("2016-01-13"))
 )
 
 
 
-weather_list = list(
-  list(label="temperature_outside",value = "temperature_outside"),
-  list(label="dewpoint",value = "dewpoint"),
-  list(label="humidity_outside",value = "humidity_outside"),
-  list(label="pressure",value = "pressure"),
-  list(label="windspeed",value = "windspeed"),
-  list(label="visibility",value = "bisibility")
+weather_list <-list(
+  "temperature_outside",
+  "dewpoint",
+  "humidity_outside",
+  "pressure",
+  "windspeed",
+  "visibility"
+)
+
+choice2 <- lapply(
+  weather_list,
+  function(wl) {
+    list(label = wl,
+         value = wl)
+  }
 )
 
 humidity_list = list(
@@ -178,10 +187,10 @@ wind_list = list(
 
 
 choice = dccDropdown(
-  id="chart_dropdown",
+  id="weather_yaxis",
   value="temperature_outside",
   style=list(color="blue"),
-  options=weather_list,
+  options=choice2,
 )
 
 SIDEBAR2 <- list(dbcRow("Energy Dashboard",style=list('font-size'='30px')),
@@ -228,8 +237,15 @@ TAB1 <- list(
 
 # function for tab2
 TAB2<-list(
-  "This is Tab2"
-  )
+  div("Tab2: Plot1"),
+  
+  br(), 
+  dccGraph(id="energy_plot"),
+  br(), 
+  div("Tab2: Plot2"),
+  br(),
+  dccGraph(id="weather_plot") 
+)
 
 
 # function for tab layout interface
@@ -431,6 +447,52 @@ app %>% add_callback(
       ggplotly(plot1)
     }
   }
+)
+app %>% add_callback(
+  output("energy_plot", "figure"),
+  list( 
+    input("my-date-picker-range", 'start_date'),
+    input("my-date-picker-range", 'end_date')
+  ), 
+  function(start_date, end_date){
+    p1 <- energy %>%
+      filter(date >= start_date & date <= end_date) %>%
+      pivot_longer("energy_appliances":"energy_lights", names_to ="source", values_to ="energy_usage") %>% 
+      ggplot() +
+      aes(
+        x = date,
+        y = energy_usage,
+        fill = source
+      ) +
+      geom_area(stat="identity") +
+      labs(x="Time Elapsed", y="Energy Used in kWh")
+    
+    ggplotly(p1)
+  }
+)
+
+#Callback for plot 2
+app %>% add_callback(
+  output("weather_plot", "figure"),
+  list( 
+    input("my-date-picker-range", 'start_date'),
+    input("my-date-picker-range", 'end_date'),
+    input("weather_yaxis", 'value')
+  ), 
+  function(start_date, end_date, y){
+    p2 <- energy %>%
+      filter(date >= start_date & date <= end_date) %>%
+      ggplot()+
+      aes(
+        x = date,
+        y = !!sym(y)
+      ) +
+      geom_line() +
+      labs(x="Time Elapsed")
+    
+    ggplotly(p2)
+  }
+  
 )
 
 app$run_server(host = "0.0.0.0", port = Sys.getenv('PORT', 8050))
