@@ -68,13 +68,14 @@ function(start_date, end_date){
     p1 <- energy %>%
     filter(date >= start_date & date <= end_date) %>%
     pivot_longer("energy_appliances":"energy_lights", names_to ="source", values_to ="energy_usage") %>% 
-    ggplot()+
+    ggplot() +
         aes(
         x = date,
         y = energy_usage,
         fill = source
-        )+
-        geom_area(stat="identity")
+        ) +
+        geom_area(stat="identity") +
+        labs(x="Time Elapsed", y="Energy Used in kWh")
     
     ggplotly(p1)
     }
@@ -96,7 +97,8 @@ function(start_date, end_date, y){
         x = date,
         y = !!sym(y)
         ) +
-        geom_line()
+        geom_line() +
+        labs(x="Time Elapsed")
     
     ggplotly(p2)
     }
