@@ -1,6 +1,6 @@
 # WELCOME
 
-#  [Energy Usage Dashboard](https://dashboard1-group-a-python.herokuapp.com) (Group A)
+#  [Energy Usage Dashboard](http://dashboard2-group-a-r.herokuapp.com) (Group A)
 
 Finding the patterns in the energy usage of a house based on weather conditions! Who would think something like weather condition would effect the consumption of energy? We did!!
 
