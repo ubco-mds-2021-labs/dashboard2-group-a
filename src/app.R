@@ -229,9 +229,9 @@ SIDEBAR = dbcCol(id="sidebar",
 
 # function for tab1
 TAB1 <- list(
-  h3("The average of temperature of the selected rooms is plotted with the selected time range"), # nolint
+  h4("The average of temperature of the selected rooms is plotted with the selected time range"), # nolint
   dccGraph(id = "plot1"),
-  h3("The average of humidity of the selected rooms is plotted with the selected time range"), # nolint
+  h4("The average of humidity of the selected rooms is plotted with the selected time range"), # nolint
   dccGraph(id = "plot2")
   )
 
