@@ -1,4 +1,4 @@
-* We have deployed the same framework done in milestone 2 for milestone 3 as well. That is, we have compared the weather conditions with the energy consumption patterns of a European house.
+We have deployed the same framework done in milestone 2 for milestone 3 as well. That is, we have compared the weather conditions with the energy consumption patterns of a European house.
 
 # Features Implemented
 We have two tabs in the dashboard with a sidebar and 2 plots in each tab. 
@@ -19,7 +19,7 @@ We have two tabs in the dashboard with a sidebar and 2 plots in each tab.
 
 
 ### Tab 2
-* The energy use visualization has been dynamically connected to the date picker component.
+* The date picker component is used to dynamically update plot 1 and plot2 on the energy usage.
 * Time series visualization with sidebar dropdown integration for variable selection.
 
 # Features Not Yet Implemented
@@ -27,3 +27,11 @@ We have two tabs in the dashboard with a sidebar and 2 plots in each tab.
 * App styling and formatting not yet tidied and formalized. Appearance is still a rough draft, not a final product.
 * Tab 2 may end up adding another visualization in our final dashboard to compare dropdown items.
 * The App is slow and should be made faster and cleaner.
+
+## Reflections on implementing the same app in 2 different languages
+
+* The built-in interactivity of the base visualizations in ggplot is useful for  implementation and user interactivity .
+* The feedback received was positive and we will be going ahead with the future enhancements as planned.
+* The modular coding was implemented in python version of the app and it was not implemented in the R version of this app.
+* The modular version of the code was easier to debug as everything was divided into different components.
+* The R version has multiple lines of code in a single file which could become troublesome to debug in case of any errors.
