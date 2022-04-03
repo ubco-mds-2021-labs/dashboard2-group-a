@@ -10,7 +10,7 @@ library(tidyverse)
 library(dashHtmlComponents)
 
 temp_df <- read.csv("https://raw.githubusercontent.com/ubco-mds-2021-labs/dashboard2-group-a/data_work/data/temperature_df_full.csv") # nolint
-energy <- read_csv("https://raw.githubusercontent.com/ubco-mds-2021-labs/dashboard1-group-a/main/data/energy_df_full.csv")
+energy <- read_csv("https://raw.githubusercontent.com/ubco-mds-2021-labs/dashboard2-group-a/data_work/data/energy_df_full.csv")
 
 # function for sidebar1
 
